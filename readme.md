@@ -2,7 +2,7 @@
 -
 ![Image1](https://github.com/innightwolfsleep/storage/raw/main/textgen_telegram.PNG)
 
-This is wrapper for [abetlen/llama-cpp-python](https://github.com/abetlen/llama-cpp-python) providing chat like telegram bot interface.
+This is wrapper for [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp) / [abetlen/llama-cpp-python](https://github.com/abetlen/llama-cpp-python) providing chat like telegram bot interface.
 
 REQUIREMENTS:
 - python-telegram-bot==13.15
