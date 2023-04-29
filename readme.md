@@ -22,13 +22,10 @@ pip install -r llama-cpp-telegram_bot\requirements.txt
 ```
 
 HOW TO USE:
-1) add your bot token to "telegram_token.txt" (ask https://t.me/BotFather how to get token)
-2) add your model bin file to "models"
-3) write path to your bin model file in telegram_llm_model_path.txt
-2) run 
-```
-python main.py
-```
+1) add your bot token to **llama-cpp-telegram_bot/telegram_token.txt** (ask https://t.me/BotFather how to get token)
+2) add your model bin file to **llama-cpp-telegram_bot/models**
+3) write path to your bin model file in **llama-cpp-telegram_bot/telegram_llm_model_path.txt**
+2) run **python3 llama-cpp-telegram_bot/main.py**
 
 FEATURES:
 - chat and notebook modes
