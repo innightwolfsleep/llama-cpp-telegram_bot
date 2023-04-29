@@ -1,24 +1,34 @@
-#Extension connecting text-generator to telegram bot api.
+#Extension connecting llama-cpp-python to telegram bot api.
 -
 ![Image1](https://github.com/innightwolfsleep/storage/raw/main/textgen_telegram.PNG)
 
-This is extension for [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) providing cai-chat like telegram bot interface.
+This is wrapper for [abetlen/llama-cpp-python](https://github.com/abetlen/llama-cpp-python) providing chat like telegram bot interface.
 
 REQUIREMENTS:
 - python-telegram-bot==13.15
 - pyyaml
+- deep-translator==1.9.2
+- llama-cpp-python
 
 HOW TO INSTALL:
 1) clone this repo to "text-generation-webui\extensions"
 ```
 cd text-generation-webui
-git clone https://github.com/innightwolfsleep/text-generation-webui-telegram_bot extensions\telegram_bot
+git clone https://github.com/innightwolfsleep/llama-cpp-telegram_bot 
 ```
-2) install "python-telegram-bot==13.15" module to your textgen environment. (Easiest way add in start script "**call pip install -r extensions\telegram_bot\requirements.txt**" before "python webui.py")
+2) install requirements. 
+```
+pip install -r llama-cpp-telegram_bot\requirements.txt
+```
 
 HOW TO USE:
-1) add your bot token to "text-generation-webui\extensions\telegram_bot\telegram_token.txt" (ask https://t.me/BotFather how to get token)
-2) run server.py with "--extensions telegram_bot"
+1) add your bot token to "telegram_token.txt" (ask https://t.me/BotFather how to get token)
+2) add your model bin file to "models"
+3) write path to your bin model file in telegram_llm_model_path.txt
+2) run 
+```
+python main.py
+```
 
 FEATURES:
 - chat and notebook modes
