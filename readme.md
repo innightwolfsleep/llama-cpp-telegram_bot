@@ -2,7 +2,7 @@
 -
 ![Image1](https://github.com/innightwolfsleep/storage/raw/main/textgen_telegram.PNG)
 
-This is wrapper for [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp) / [abetlen/llama-cpp-python](https://github.com/abetlen/llama-cpp-python) providing chat like telegram bot interface.
+This is wrapper for [abetlen/llama-cpp-python](https://github.com/abetlen/llama-cpp-python) providing chat like telegram bot interface.
 
 REQUIREMENTS:
 - python-telegram-bot==13.15
@@ -22,10 +22,10 @@ pip install -r llama-cpp-telegram_bot\requirements.txt
 ```
 
 HOW TO USE:
-1) add your bot token to **llama-cpp-telegram_bot/telegram_token.txt** (ask https://t.me/BotFather how to get token)
-2) add your model bin file to **llama-cpp-telegram_bot/models**
-3) write path to your bin model file in **llama-cpp-telegram_bot/telegram_llm_model_path.txt**
-2) run **python3 llama-cpp-telegram_bot/main.py**
+1) add your bot token to llama-cpp-telegram_bot/telegram_token.txt (ask https://t.me/BotFather how to get token)
+2) add your model bin file to llama-cpp-telegram_bot/models
+3) write path to your bin model file in llama-cpp-telegram_bot/telegram_llm_model_path.txt
+2) run "python llama-cpp-telegram_bot/main.py"
 
 FEATURES:
 - chat and notebook modes
@@ -36,6 +36,7 @@ FEATURES:
 - you can load new characters from text-generation-webui\characters with "/load" command!!!
 - you can load new model during conversation with /models 
 - chatting # prefix for impersonate: "#You" or "#Castle guard" or "#Alice thoughts about me"
+- "!" prefix to replace last bot message
 - save/load history in chat by downloading/forwarding to chat .json file
 - integrated auto-translate (you can set model/user language parameter) 
 
