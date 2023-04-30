@@ -4,12 +4,22 @@ import os
 #  Place where path to LLM file stored
 telegram_llm_model_path_file = "telegram_llm_model_path.txt"
 
+
+n_ctx = 2048
+seed = 0
 #  Get llm_generator
 with open(telegram_llm_model_path_file, "r") as model_path_file:
-    llm_generator: Llama = Llama(model_path=model_path_file.read(), n_ctx=2048)
+    llm_generator: Llama = Llama(model_path=model_path_file.read(), n_ctx=n_ctx, seed=seed)
 
 
-def get_answer(prompt, generation_params, eos_token, stopping_strings, default_answer):
+def get_answer(
+        prompt,
+        generation_params,
+        eos_token,
+        stopping_strings,
+        default_answer,
+        turn_template='',
+        **kwargs):
     answer = default_answer
     try:
         answer = llm_generator(
@@ -37,4 +47,4 @@ def get_model_list():
 
 def load_model(model_file: str):
     with open("models\\" + model_file, "r") as model:
-        llm_generator: Llama = Llama(model_path=model.read(), n_ctx=2048)
+        llm_generator: Llama = Llama(model_path=model.read(), n_ctx=n_ctx, seed=seed)
