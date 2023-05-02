@@ -5,7 +5,7 @@ import os
 telegram_llm_model_path_file = "telegram_llm_model_path.txt"
 
 
-n_ctx = 2048
+n_ctx = 8196
 seed = 0
 #  Get llm_generator
 with open(telegram_llm_model_path_file, "r") as model_path_file:
@@ -28,7 +28,7 @@ def get_answer(
             top_p=generation_params["top_p"],
             top_k=generation_params["top_k"],
             repeat_penalty=generation_params["repetition_penalty"],
-            stop=eos_token,
+            stop=stopping_strings,
             max_tokens=generation_params["max_new_tokens"],
             echo=True)
         answer = answer["choices"][0]["text"].replace(prompt, "")
