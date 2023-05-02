@@ -48,5 +48,4 @@ def get_model_list():
 
 def load_model(model_file: str):
     with open("models\\" + model_file, "r") as model:
-        llm_generator: Llama = Llama(
-            model_path=model.read(), n_ctx=n_ctx, seed=seed)
+        llm_generator: Llama = Llama(model_path=model.read(), n_ctx=n_ctx, seed=seed)
