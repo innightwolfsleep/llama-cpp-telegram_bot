@@ -9,7 +9,8 @@ n_ctx = 8196
 seed = 0
 #  Get llm_generator
 with open(telegram_llm_model_path_file, "r") as model_path_file:
-    llm_generator: Llama = Llama(model_path=model_path_file.read(), n_ctx=n_ctx, seed=seed)
+    data = model_path_file.read().rstrip()
+    llm_generator: Llama = Llama(model_path=data, n_ctx=n_ctx, seed=seed)
 
 
 def get_answer(
@@ -47,4 +48,5 @@ def get_model_list():
 
 def load_model(model_file: str):
     with open("models\\" + model_file, "r") as model:
-        llm_generator: Llama = Llama(model_path=model.read(), n_ctx=n_ctx, seed=seed)
+        llm_generator: Llama = Llama(
+            model_path=model.read(), n_ctx=n_ctx, seed=seed)
