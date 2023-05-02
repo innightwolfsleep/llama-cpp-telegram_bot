@@ -11,9 +11,8 @@ REQUIREMENTS:
 - llama-cpp-python
 
 HOW TO INSTALL:
-1) clone this repo to "text-generation-webui\extensions"
+1) clone this repo 
 ```
-cd text-generation-webui
 git clone https://github.com/innightwolfsleep/llama-cpp-telegram_bot 
 ```
 2) install requirements. 
@@ -25,7 +24,11 @@ HOW TO USE:
 1) add your bot token to llama-cpp-telegram_bot/telegram_token.txt (ask https://t.me/BotFather how to get token)
 2) add your model bin file to llama-cpp-telegram_bot/models
 3) write path to your bin model file in llama-cpp-telegram_bot/telegram_llm_model_path.txt
-2) run "python llama-cpp-telegram_bot/main.py"
+2) run 
+```
+cd llama-cpp-telegram_bot
+python main.py
+```
 
 FEATURES:
 - chat and notebook modes
