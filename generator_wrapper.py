@@ -23,7 +23,7 @@ def get_answer(
         **kwargs):
     answer = default_answer
     try:
-        answer = llm_generator(
+        answer = llm_generator.create_completion(
             prompt=prompt,
             temperature=generation_params["temperature"],
             top_p=generation_params["top_p"],
@@ -36,6 +36,10 @@ def get_answer(
     except Exception as exception:
         print("generator_wrapper get answer error ", exception)
     return answer
+
+
+def tokens_count(text: str):
+    return len(llm_generator.tokenize(text.encode(encoding="utf-8", errors="strict")))
 
 
 def get_model_list():
