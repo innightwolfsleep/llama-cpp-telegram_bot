@@ -6,7 +6,7 @@ telegram_llm_model_path_file = "telegram_llm_model_path.txt"
 
 
 n_ctx = 8196
-seed = -1
+seed = 0
 #  Get llm_generator
 with open(telegram_llm_model_path_file, "r") as model_path_file:
     data = model_path_file.read().rstrip()
