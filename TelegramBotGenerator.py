@@ -6,11 +6,11 @@ telegram_llm_model_path_file = "telegram_llm_model_path.txt"
 
 
 n_ctx = 8196
-seed = 0
+seed = -1
 #  Get llm_generator
 with open(telegram_llm_model_path_file, "r") as model_path_file:
     data = model_path_file.read().rstrip()
-    llm_generator: Llama = Llama(model_path=data, n_ctx=n_ctx, seed=seed)
+    llm_generator: Llama = Llama(model_path=data, n_ctx=n_ctx, seed=seed, n_gpu_layers=2000)
 
 
 def get_answer(
