@@ -4,7 +4,6 @@ import os
 #  Place where path to LLM file stored
 telegram_llm_model_path_file = "telegram_llm_model_path.txt"
 
-
 n_ctx = 8196
 seed = 0
 n_gpu_layers = 0
@@ -19,10 +18,12 @@ def get_answer(
         generation_params,
         eos_token,
         stopping_strings,
-        default_answer,
+        default_answer: str,
         turn_template='',
         **kwargs):
+    # Preparing, add stopping_strings
     answer = default_answer
+
     try:
         answer = llm_generator.create_completion(
             prompt=prompt,
