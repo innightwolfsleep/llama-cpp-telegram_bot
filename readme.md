@@ -40,6 +40,8 @@ FEATURES:
 - "++" prefix permanently replace bot name during chat (switch conversation to another character)
 - save/load history in chat by downloading/forwarding to chat .json file
 - integrated auto-translate (you can set model/user language parameter) 
+- integrated silero_tts - you can get voice message from bot
+- translation_as_hidden_text option in .cfg - if you want to learn english with bot)))
 
 TBC:
 - replace "X typing" by yield from generator
