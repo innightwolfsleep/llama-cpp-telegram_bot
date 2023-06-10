@@ -966,7 +966,6 @@ class TelegramBotWrapper:
                        self.translate_html_tag[0] + text + self.translate_html_tag[1]
             else:
                 text = self.html_tag[0] + text + self.html_tag[1]
-        print(text)
         return text
 
     # =============================================================================
