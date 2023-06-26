@@ -438,17 +438,14 @@ class TelegramBotWrapper:
             user = self.users[chat_id]
             # Generate answer and replace "typing" message with it
             user_text = self.prepare_text(user_text, self.users[chat_id].language, "to_model")
-            answer, system_message = self.generate_answer(user_in=user_text, chat_id=chat_id)
-            if system_message:
-                context.bot.send_message(text=answer, chat_id=chat_id)
-            else:
-                message = self.send(text=answer, chat_id=chat_id, context=context)
-                # Clear buttons on last message (if they exist in current thread)
-                self.clean_last_message_markup(context, chat_id)
-                # Add message ID to message history
-                user.msg_id.append(message.message_id)
-                # Save user history
-                user.save_user_history(chat_id, self.history_dir_path)
+            answer = self.generate_answer(user_in=user_text, chat_id=chat_id)
+            message = self.send(text=answer, chat_id=chat_id, context=context)
+            # Clear buttons on last message (if they exist in current thread)
+            self.clean_last_message_markup(context, chat_id)
+            # Add message ID to message history
+            user.msg_id.append(message.message_id)
+            # Save user history
+            user.save_user_history(chat_id, self.history_dir_path)
         except Exception as e:
             print(e)
             raise e
@@ -545,7 +542,7 @@ class TelegramBotWrapper:
         user = self.users[chat_id]
         # send "typing"
         self.clean_last_message_markup(context, chat_id)
-        answer, _ = self.generate_answer(user_in=self.GENERATOR_MODE_NEXT, chat_id=chat_id)
+        answer = self.generate_answer(user_in=self.GENERATOR_MODE_NEXT, chat_id=chat_id)
         message = self.send(text=answer, chat_id=chat_id, context=context)
         self.users[chat_id].msg_id.append(message.message_id)
         user.save_user_history(chat_id, self.history_dir_path)
@@ -555,7 +552,7 @@ class TelegramBotWrapper:
         message = upd.callback_query.message
         user = self.users[chat_id]
         # get answer and replace message text!
-        answer, _ = self.generate_answer(user_in=self.GENERATOR_MODE_CONTINUE, chat_id=chat_id)
+        answer = self.generate_answer(user_in=self.GENERATOR_MODE_CONTINUE, chat_id=chat_id)
         self.edit(text=answer, chat_id=chat_id, message_id=message.message_id, context=context, upd=upd)
         self.users[chat_id].msg_id.append(message.message_id)
         user.save_user_history(chat_id, self.history_dir_path)
@@ -584,7 +581,7 @@ class TelegramBotWrapper:
         # remove last bot answer, read and remove last user reply
         user_in = user.truncate_history()
         # get answer and replace message text!
-        answer, _ = self.generate_answer(user_in=user_in, chat_id=chat_id)
+        answer = self.generate_answer(user_in=user_in, chat_id=chat_id)
         self.edit(text=answer, chat_id=chat_id, message_id=msg.message_id, context=context, upd=upd)
         user.save_user_history(chat_id, self.history_dir_path)
 
@@ -857,7 +854,7 @@ class TelegramBotWrapper:
 
     # =============================================================================
     # answer generator
-    def generate_answer(self, user_in, chat_id) -> tuple[str, False]:
+    def generate_answer(self, user_in, chat_id):
         # if generation will fail, return "fail" answer
         answer = self.GENERATOR_FAIL
         user = self.users[chat_id]
@@ -866,7 +863,7 @@ class TelegramBotWrapper:
         if user_in[:2] in self.permanent_impersonate_prefixes:
             # If user_in starts with perm_prefix - just replace name2
             user.name2 = user_in[2:]
-            return "New name: " + user.name2, True
+            return "New name: " + user.name2
         if self.bot_mode in [self.MODE_QUERY]:
             user.history = []
         if self.bot_mode == "notebook":
@@ -900,7 +897,7 @@ class TelegramBotWrapper:
             # If user_in starts with replace_prefix - fully replace last message
             user.user_in.append(user_in)
             user.history[-1] = user_in[1:]
-            return user.history[-1], False
+            return user.history[-1]
         else:
             # If not notebook/impersonate/continue mode then ordinary chat preparing
             # add "name1&2:" to user and bot message (generation from name2 point of view);
@@ -936,32 +933,26 @@ class TelegramBotWrapper:
                 break
         prompt = context + prompt.replace("\n\n", "\n")
 
-        try:
-            # acquire generator lock if we can
-            self.generator_lock.acquire(timeout=self.generation_timeout)
-            # Generate!
-            answer = Generator.get_answer(prompt=prompt,
-                                          generation_params=self.generation_params,
-                                          user=json.loads(user.to_json()),
-                                          eos_token=eos_token,
-                                          stopping_strings=stopping_strings,
-                                          default_answer=answer,
-                                          turn_template=user.turn_template)
-            # If generation result zero length - return  "Empty answer."
-            if len(answer) < 1:
-                answer = self.GENERATOR_EMPTY_ANSWER
-        except Exception as exception:
-            print("generate_answer", exception)
-        finally:
-            # anyway, release generator lock. Then return
-            self.generator_lock.release()
-            if answer not in [self.GENERATOR_EMPTY_ANSWER, self.GENERATOR_FAIL]:
-                # if everything ok - add generated answer in history and return last
-                for end in stopping_strings:
-                    if answer.endswith(end):
-                        answer = answer[:-len(end)]
-                user.history[-1] = user.history[-1] + " " + answer
-            return user.history[-1], False
+        # acquire generator lock if we can
+        self.generator_lock.acquire(timeout=self.generation_timeout)
+        # Generate!
+        answer = Generator.get_answer(prompt=prompt,
+                                      generation_params=self.generation_params,
+                                      user=json.loads(user.to_json()),
+                                      eos_token=eos_token,
+                                      stopping_strings=stopping_strings,
+                                      default_answer=answer,
+                                      turn_template=user.turn_template)
+        # If generation result zero length - return  "Empty answer."
+        # anyway, release generator lock. Then return
+        self.generator_lock.release()
+        if answer not in [self.GENERATOR_EMPTY_ANSWER, self.GENERATOR_FAIL]:
+            # if everything ok - add generated answer in history and return last
+            for end in stopping_strings:
+                if answer.endswith(end):
+                    answer = answer[:-len(end)]
+            user.history[-1] = user.history[-1] + " " + answer
+        return user.history[-1]
 
     def prepare_text(self, original_text, user_language="en", direction="to_user"):
         text = original_text
