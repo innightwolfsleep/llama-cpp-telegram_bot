@@ -642,7 +642,8 @@ Language: {user.language}"""
         user = self.users[chat_id]
         if user.msg_id:
             self.clean_last_message_markup(context, chat_id)
-        user.load_user_history(user.char_file)
+        user.reset_history()
+        user.load_character_file(self.characters_dir_path, user.char_file)
         send_text = self.make_template_message("mem_reset", chat_id)
         context.bot.send_message(chat_id=chat_id, text=send_text,
                                  reply_markup=self.get_options_keyboard(chat_id),
@@ -874,7 +875,6 @@ Language: {user.language}"""
     # answer generator
     def generate_answer(self, user_in, chat_id) -> tuple[str, False]:
         answer = self.GENERATOR_FAIL
-        stopping_strings = []
         user = self.users[chat_id]
 
         try:
@@ -960,18 +960,19 @@ Language: {user.language}"""
             # If generation result zero length - return  "Empty answer."
             if len(answer) < 1:
                 answer = self.GENERATOR_EMPTY_ANSWER
-        except Exception as exception:
-            print("generate_answer", exception)
-        finally:
-            # anyway, release generator lock. Then return
+            # Final return
             if answer not in [self.GENERATOR_EMPTY_ANSWER, self.GENERATOR_FAIL]:
                 # if everything ok - add generated answer in history and return last
                 for end in stopping_strings:
                     if answer.endswith(end):
                         answer = answer[:-len(end)]
                 user.history[-1] = user.history[-1] + " " + answer
-            self.generator_lock.release()
             return user.history[-1], False
+        except Exception as exception:
+            print("generate_answer", exception)
+        finally:
+            # anyway, release generator lock. Then return
+            self.generator_lock.release()
 
     def prepare_text(self, original_text, user_language="en", direction="to_user"):
         text = original_text
